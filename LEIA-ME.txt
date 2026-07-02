@@ -1,16 +1,7 @@
 ACERTO DE CONTAS — TopWeb x Rogério Gás
 ========================================
+index.html ......... página de conferência (link para o Rogério)
+comprovantes/ ...... 28 comprovantes PIX individuais (todos ao CNPJ 18.859.737/0001-20)
+dividas/ ........... 2 relatórios de pedidos da Rogério Gás
 
-Como publicar:
-1. Suba TODO o conteúdo desta pasta para sua hospedagem (mantendo as subpastas).
-2. O arquivo principal é o index.html — é a página que abre.
-3. As pastas comprovantes/, extratos/ e dividas/ contêm os PDFs
-   que são abertos pelos links da página. NÃO renomeie nem mova.
-
-Estrutura:
-  index.html ............. página de conferência (enviar link ao Rogério)
-  comprovantes/ .......... 26 comprovantes PIX individuais
-  extratos/ .............. 11 extratos bancários (Sicredi e Sicoob)
-  dividas/ ............... 2 relatórios de pedidos da Rogério Gás
-
-Saldo em aberto: R$ 3.823,06 (compras de 25 a 29 de junho/2026)
+Baseado nos comprovantes (data + valor). Saldo em aberto: R$ 3.823,06.
