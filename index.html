@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Acerto de Contas — TopWeb × Rogério Gás</title>
+<style>
+:root{--ink:#15201f;--paper:#fbfaf7;--line:#e4e0d6;--teal:#0f5e57;--teal-d:#0a3f3a;--teal-soft:#e7f1ef;
+--green:#1f7a4d;--green-soft:#e8f3ec;--amber:#a8650f;--amber-soft:#fbf0df;--mute:#6b736f;--num:'Cambria','Georgia',serif;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:'Segoe UI','Helvetica Neue',Arial,sans-serif;font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;}
+.page{max-width:920px;margin:0 auto;padding:28px 22px 60px;}
+.num{font-variant-numeric:tabular-nums;font-family:var(--num);white-space:nowrap;}
+.hero{display:flex;gap:20px;align-items:center;background:linear-gradient(135deg,var(--teal-d),var(--teal));color:#fff;border-radius:14px;padding:26px 28px;margin-bottom:22px;box-shadow:0 10px 30px -14px rgba(10,63,58,.55);}
+.hero-mark{flex:none;width:58px;height:58px;border-radius:13px;background:rgba(255,255,255,.14);border:1.5px solid rgba(255,255,255,.35);display:grid;place-items:center;font-weight:700;font-size:20px;letter-spacing:1px;}
+.eyebrow{margin:0 0 6px;font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;color:#bfe0db;font-weight:600;}
+.hero h1{margin:0 0 8px;font-size:27px;line-height:1.12;font-weight:700;text-wrap:balance;}
+.sub{margin:0;font-size:14px;color:#dceeeb;max-width:64ch;}
+.sub strong{color:#fff;}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px;}
+.card{border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:#fff;display:flex;flex-direction:column;gap:4px;position:relative;overflow:hidden;}
+.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;}
+.card.debt::before{background:var(--teal);}.card.paid::before{background:var(--green);}.card.bal::before{background:var(--amber);}
+.card-lbl{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--mute);font-weight:600;}
+.card-val{font-family:var(--num);font-size:25px;font-weight:600;}
+.card.paid .card-val{color:var(--green);}.card.bal .card-val{color:var(--amber);}
+.card-meta{font-size:12.5px;color:var(--mute);}
+.bar-wrap{margin:4px 0 28px;}
+.bar{display:flex;height:32px;border-radius:8px;overflow:hidden;border:1px solid var(--line);}
+.bar-paid{background:var(--green);color:#fff;display:flex;align-items:center;padding:0 12px;font-size:12px;font-weight:600;}
+.bar-open{flex:1;background:var(--amber-soft);color:var(--amber);display:flex;align-items:center;justify-content:flex-end;padding:0 12px;font-size:12px;font-weight:600;}
+.bar span{white-space:nowrap;font-variant-numeric:tabular-nums;}
+.block{margin:26px 0;}
+h2{font-size:18px;margin:0 0 4px;font-weight:700;padding-bottom:8px;border-bottom:2px solid var(--teal);display:inline-block;}
+.minor{font-size:13px;margin:0 0 4px;color:var(--teal-d);text-transform:uppercase;letter-spacing:.05em;}
+.note{font-size:13px;color:var(--mute);margin:8px 0 14px;max-width:76ch;}
+.tbl-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:#fff;}
+table{width:100%;border-collapse:collapse;font-size:13.5px;}
+thead th{background:var(--teal-soft);color:var(--teal-d);text-align:left;font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;font-weight:700;padding:10px 14px;border-bottom:1px solid var(--line);}
+th.num,td.num{text-align:right;}
+tbody td{padding:9px 14px;border-bottom:1px solid #f0ede5;}
+tbody tr:nth-child(even){background:#fcfbf8;}
+td.dt{font-variant-numeric:tabular-nums;white-space:nowrap;}
+td.desc{color:var(--mute);font-size:12.5px;}
+td.muted,.muted{color:var(--mute);}
+tfoot td{padding:10px 14px;font-size:13px;border-top:1px solid var(--line);background:#faf8f3;color:var(--mute);font-weight:600;}
+tfoot td.num{color:var(--ink);}
+tfoot tr.grand td{background:var(--teal-d);color:#fff;font-size:15px;padding:12px 14px;}
+tfoot tr.grand td.num{color:#fff;font-weight:700;}
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;}
+.tag.sicredi{background:var(--green-soft);color:var(--green);}
+.tag.sicoob{background:#e9eef6;color:#2c4f86;}
+.tag.nubank{background:#efe7f6;color:#6d3fa6;}
+.cc{text-align:center;white-space:nowrap;}
+.cbtn{display:inline-block;font-size:12px;font-weight:700;color:#fff;background:var(--teal);padding:5px 12px;border-radius:7px;text-decoration:none;transition:background .15s;}
+.cbtn:hover{background:var(--teal-d);}
+.cbtn:focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
+.cno{font-size:11.5px;color:var(--mute);font-style:italic;}
+.settle{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;width:100%;}
+.settle td{padding:13px 18px;border-bottom:1px solid #f0ede5;font-size:15px;}
+.settle td.num{font-size:16px;}
+.settle td.neg{color:var(--green);}
+.settle tr.result td{background:var(--amber-soft);font-weight:700;font-size:17px;border-bottom:none;color:var(--amber);}
+.chart{display:flex;align-items:flex-end;gap:16px;height:190px;padding:26px 12px 0;border:1px solid var(--line);border-radius:10px;background:#fff;}
+.gcol{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:6px;}
+.gbar{width:100%;max-width:78px;background:linear-gradient(180deg,#c9820f,var(--amber));border-radius:6px 6px 0 0;position:relative;min-height:4px;}
+.gval{position:absolute;top:-19px;left:0;right:0;text-align:center;font-size:11px;font-weight:700;color:var(--amber);font-variant-numeric:tabular-nums;}
+.glbl{font-size:12px;color:var(--mute);font-weight:600;}
+.pos{color:var(--green);}.neg2{color:var(--amber);}
+td.saldo{font-weight:700;}
+tr.parcial{background:var(--amber-soft)!important;}
+.fifo-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.fcard{border:1px solid var(--line);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:3px;position:relative;overflow:hidden;background:#fff;}
+.fcard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;}
+.fcard.ok::before{background:var(--green);}.fcard.open::before{background:var(--amber);}
+.fnum{font-family:var(--num);font-size:28px;font-weight:600;line-height:1;}
+.fcard.ok .fnum{color:var(--green);}.fcard.open .fnum{color:var(--amber);}
+.flbl{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;}
+.fmeta{font-size:12px;color:var(--mute);}
+.fval{font-family:var(--num);font-size:17px;font-weight:600;margin-top:4px;}
+.docs{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;}
+.doc{display:flex;align-items:center;gap:10px;padding:11px 14px;border:1px solid var(--line);border-radius:9px;background:#fff;text-decoration:none;color:var(--ink);font-size:13px;font-weight:500;transition:border-color .15s,background .15s;}
+.doc:hover{border-color:var(--teal);background:var(--teal-soft);}
+.doc span{font-size:16px;}
+details summary{cursor:pointer;font-weight:600;color:var(--teal-d);padding:6px 0;}
+footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:11.5px;color:var(--mute);}
+@media(max-width:640px){
+  .page{padding:20px 14px 48px;}
+  .cards,.fifo-cards{grid-template-columns:1fr;}
+  .hero{flex-direction:column;text-align:center;padding:22px 18px;}
+  .hero h1{font-size:22px;}
+  footer{flex-direction:column;}
+  h2{font-size:17px;}
+  /* tabela de pagamentos vira cartoes empilhados */
+  .pgtbl thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);}
+  .pgtbl,.pgtbl tbody,.pgtbl tr,.pgtbl td{display:block;width:100%;}
+  .pgtbl tr{border:1px solid var(--line);border-radius:10px;margin:0 0 10px;padding:6px 12px;background:#fff!important;}
+  .pgtbl td{border:none!important;padding:7px 0;display:flex;justify-content:space-between;align-items:center;gap:12px;text-align:right;}
+  .pgtbl td::before{content:attr(data-label);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--mute);font-weight:700;text-align:left;}
+  .pgtbl td.desc{font-size:12.5px;}
+  .pgtbl td.num{font-size:16px;font-weight:700;}
+  .pgtbl td.cc{justify-content:stretch;padding-top:10px;border-top:1px solid #f0ede5!important;margin-top:4px;}
+  .pgtbl td.cc::before{display:none;}
+  .pgtbl .cbtn{display:block;width:100%;text-align:center;padding:12px;font-size:14px;}
+  .pgtbl .cno{width:100%;text-align:center;}
+  .pgtbl tfoot{display:block;} .pgtbl tfoot tr{border:none;background:transparent!important;padding:0;}
+  .pgtbl tfoot td{display:flex;padding:8px 12px;}
+  .pgtbl tfoot td[colspan]::before{display:none;}
+  .pgtbl tfoot tr.grand td{background:var(--teal-d)!important;color:#fff;border-radius:8px;}
+  .docs{grid-template-columns:1fr;}
+  .chart{gap:8px;padding:24px 6px 0;} .gval{font-size:9.5px;}
+}
+</style>
+</head><body>
+<div class="page">
+  <header class="hero">
+    <div class="hero-mark">RG</div>
+    <div class="hero-txt">
+      <p class="eyebrow">Prestação de contas · 01/03/2026 a 02/07/2026</p>
+      <h1>Acerto de contas — TopWeb &times; Rogério Gás</h1>
+      <p class="sub">Conferência aberta de todas as compras e pagamentos à <strong>Rogério Gás / I DA S C Comércio</strong> — CNPJ 18.859.737/0001-20. Cada pagamento tem o comprovante em PIX disponível para conferência.</p>
+    </div>
+  </header>
+
+  <section class="cards">
+    <div class="card debt"><span class="card-lbl">Total em compras</span><span class="card-val">R$ 35.426,83</span><span class="card-meta">133 pedidos</span></div>
+    <div class="card paid"><span class="card-lbl">Total pago</span><span class="card-val">R$ 31.603,77</span><span class="card-meta">28 pagamentos · 89.2%</span></div>
+    <div class="card bal"><span class="card-lbl">Saldo em aberto</span><span class="card-val">R$ 3.823,06</span><span class="card-meta">a pagar</span></div>
+  </section>
+  <section class="bar-wrap"><div class="bar">
+    <div class="bar-paid" style="width:89.2%"><span>Pago · R$ 31.603,77</span></div>
+    <div class="bar-open"><span>Em aberto · R$ 3.823,06</span></div>
+  </div></section>
+
+  <section class="block">
+    <h2>Pagamentos e comprovantes</h2>
+    <p class="note">Todos via PIX para o CNPJ 18.859.737/0001-20. Clique em <strong>“ver comprovante”</strong> para abrir o PIX de cada pagamento.</p>
+    <div class="tbl-scroll"><table class="pgtbl">
+      <thead><tr><th>Data</th><th>Origem</th><th>Histórico</th><th class="num">Valor (R$)</th><th class="cc">Comprovante</th></tr></thead>
+      <tbody><tr><td class="dt" data-label="Data">10/03/2026</td><td data-label="Origem"><span class="tag sicredi">Sicredi</span></td><td class="desc" data-label="Histórico">—</td><td class="num" data-label="Valor">R$ 941,10</td><td class="cc" data-label=""><a class="cbtn" href="comprovantes/2026-03-10_941-10_sicredi.pdf" target="_blank" rel="noopener">ver comprovante ↗</a></td></tr>
+<tr><td class="dt" data-label="Data">18/03/2026</td><td data-label="Origem"><span class="tag sicredi">Sicredi</span></td><td class="desc" data-label="Histórico">—</td><td class="num" data-label="Valor">R$ 3.000,00</td><td class="cc" data-label=""><a class="cbtn" href="comprovantes/2026-03-18_3000-00_sicredi.pdf" target="_blank" rel="noopener">ver comprovante ↗</a></td></tr>
+<tr><td class="dt" data-label="Data">27/03/2026</td><td data-label="Origem"><span class="tag sicoob">Sicoob</span></td><td class="desc" data-label="Histórico">Rogerio Gas Construcao Rafael</td><td class="num" data-label="Valor">R$ 3.000,00</td><td class="cc" data-label=""><a class="cbtn" href="comprovantes/2026-03-27_3000-00_sicoob.pdf" target="_blank" rel="noopener">ver comprovante ↗</a></td></tr>
+<tr><td class="dt" data-label="Data">08/04/2026</td><td data-label="Origem"><span class="tag sicredi">Sicredi</span></td><td class="desc" data-label="Histórico">—</td><td class="num" data-label="Valor">R$ 4.000,00</td><td class="cc" data-label=""><a class="cbtn" href="comprovantes/2026-04-08_4000-00_sicredi.pdf" target="_blank" rel="noopener">ver comprovante ↗</a></td></tr>
+<tr><td class="dt" data-label="Data">13/04/2026</td><td data-label="Origem"><span class="tag sicredi">Sicredi</span></td><td class="desc" data-label="Histórico">—</td><td class="num" data-label="Valor">R$ 1.000,00</td><td class="cc" data-label=""><a class="cbtn" href="comprovantes/2026-04-11_1000-00_sicredi.pdf" target="_blank" rel="noopener">ver comprovante ↗</a></td></tr>
+<tr><td class="dt" data-label="Data">14/04/2026</td><td data-label="Origem"><span class="tag sicredi">Sicredi</span></td><td class="desc" data-label="Histórico">—</td><td class="num" data-label="Valor">R$ 1.000,00</td><td class="cc" data-label=""><a class="cbtn" href="comprovantes/2026-04-14_1000-00_sicredi.pdf" target="_blank" rel="noopener">ver comprovante ↗</a></td></tr>
+<tr><td class="dt" data-label="Data">14/04/2026</td><td data-label="Origem"><span class="tag sicredi">Sicredi</span></td><td class="desc" data-label="Histórico">—</td><td class="num" data-label="Valor">R$ 1.786,00</td><td class="cc" data-label=""><a class="cbtn" href="comprovantes/2026-04-14_1786-00_sicredi.pdf" target="_blank" rel="noopener">ver comprovante ↗</a></td></tr>
+<tr><td class="dt" data-label="Data">16/04/2026</td><td data-label="Origem"><span class="tag sicredi">Sicredi</span></td><td class="desc" data-label="Histórico">—</td><td class="num" data-label="Valor">R$ 40,00</td><td class="cc" data-label=""><a class="cbtn" href="comprovantes/2026-04-16_40-00_sicredi.pdf" target="_blank" rel="noopener">ver comprovante ↗</a></td></tr>
+<tr><td class="dt" data-label="Data">16/04/2026</td><td data-label="Origem"><span class="tag sicredi">Sicredi</span></td><td class="desc" data-label="Histórico">—</td><td class="num" data-label="Valor">R$ 740,80</td><td class="cc" data-label=""><a class="cbtn" href="comprovantes/2026-04-16_740-80_sicredi.pdf" target="_blank" rel="noopener">ver comprovante ↗</a></td></tr>
+<tr><td class="dt" data-label="Data">22/04/2026</td><td data-label="Origem"><span class="tag sicredi">Sicredi</span></td><td class="desc" data-label="Histórico">—</td><td class="num" data-label="Valor">R$ 3.000,00</td><td class="cc" data-label=""><a class="cbtn" href="comprovantes/2026-04-22_3000-00_sicredi.pdf" target="_blank" rel="noopener">ver comprovante ↗</a></td></tr>
+<tr><td class="dt" data-label="Data">04/05/2026</td><td data-label="Origem"><span class="tag sicredi">Sicredi</span></td><td class="desc" data-label="Histórico">—</td><td class="num" data-label="Valor">R$ 2.000,00</td><td class="cc" data-label=""><a class="cbtn" href="comprovantes/2026-05-04_2000-00_sicredi.pdf" target="_blank" rel="noopener">ver comprovante ↗</a></td></tr>
+<tr><td class="dt" data-label="Data">14/05/2026</td><td data-label="Origem"><span class="tag sicoob">Sicoob</span></td><td class="desc" data-label="Histórico">MATERIAIS PARA A ACADEMIA</td><td class="num" data-label="Valor">R$ 1.000,00</td><td class="cc" data-label=""><a class="cbtn" href="comprovantes/2026-05-14_1000-00_sicoob.pdf" target="_blank" rel="noopener">ver comprovante ↗</a></td></tr>
+<tr><td class="dt" data-label="Data">19/05/2026</td><td data-label="Origem"><span class="tag sicoob">Sicoob</span></td><td class="desc" data-label="Histórico">MATERIAIS PARA A ACADEMIA</td><td class="num" data-label="Valor">R$ 1.000,00</td><td class="cc" data-label=""><a class="cbtn" href="comprovantes/2026-05-19_1000-00_sicoob.pdf" target="_blank" rel="noopener">ver comprovante ↗</a></td></tr>
+<tr><td class="dt" data-label="Data">27/05/2026</td><td data-label="Origem"><span class="tag sicredi">Sicredi</span></td><td class="desc" data-label="Histórico">—</td><td class="num" data-label="Valor">R$ 1.000,00</td><td class="cc" data-label=""><a class="cbtn" href="comprovantes/2026-05-27_1000-00_sicredi.pdf" target="_blank" rel="noopener">ver comprovante ↗</a></td></tr>
+<tr><td class="dt" data-label="Data">02/06/2026</td><td data-label="Origem"><span class="tag sicoob">Sicoob</span></td><td class="desc" data-label="Histórico">COMPRA DE MATERIAIS PARA A ACADEMIA</td><td class="num" data-label="Valor">R$ 2.000,00</td><td class="cc" data-label=""><a class="cbtn" href="comprovantes/2026-06-02_2000-00_sicoob.pdf" target="_blank" rel="noopener">ver comprovante ↗</a></td></tr>
+<tr><td class="dt" data-label="Data">10/06/2026</td><td data-label="Origem"><span class="tag nubank">Nubank</span></td><td class="desc" data-label="Histórico">IRIANE DA SILVA CLAUDINO</td><td class="num" data-label="Valor">R$ 1.000,00</td><td class="cc" data-label=""><a class="cbtn" href="comprovantes/2026-06-10_1000-00_nubank.pdf" target="_blank" rel="noopener">ver comprovante ↗</a></td></tr>
+<tr><td class="dt" data-label="Data">11/06/2026</td><td data-label="Origem"><span class="tag sicoob">Sicoob</span></td><td class="desc" data-label="Histórico">COMPRA DE MATERIAIS PARA A ACADEMIA</td><td class="num" data-label="Valor">R$ 1.068,17</td><td class="cc" data-label=""><a class="cbtn" href="comprovantes/2026-06-11_1068-17_sicoob.pdf" target="_blank" rel="noopener">ver comprovante ↗</a></td></tr>
+<tr><td class="dt" data-label="Data">11/06/2026</td><td data-label="Origem"><span class="tag sicoob">Sicoob</span></td><td class="desc" data-label="Histórico">MATERIAIS PARA A ACADEMIA</td><td class="num" data-label="Valor">R$ 180,00</td><td class="cc" data-label=""><a class="cbtn" href="comprovantes/2026-06-11_180-00_sicoob.pdf" target="_blank" rel="noopener">ver comprovante ↗</a></td></tr>
+<tr><td class="dt" data-label="Data">16/06/2026</td><td data-label="Origem"><span class="tag sicoob">Sicoob</span></td><td class="desc" data-label="Histórico">COMPRA DE PARAFUSOS PARA A ACADEMIA</td><td class="num" data-label="Valor">R$ 20,00</td><td class="cc" data-label=""><a class="cbtn" href="comprovantes/2026-06-16_20-00_sicoob.pdf" target="_blank" rel="noopener">ver comprovante ↗</a></td></tr>
+<tr><td class="dt" data-label="Data">16/06/2026</td><td data-label="Origem"><span class="tag sicoob">Sicoob</span></td><td class="desc" data-label="Histórico">COMPRA DE PARAFUSOS PARA A ACADEMIA</td><td class="num" data-label="Valor">R$ 9,60</td><td class="cc" data-label=""><a class="cbtn" href="comprovantes/2026-06-16_9-60_sicoob.pdf" target="_blank" rel="noopener">ver comprovante ↗</a></td></tr>
+<tr><td class="dt" data-label="Data">16/06/2026</td><td data-label="Origem"><span class="tag sicoob">Sicoob</span></td><td class="desc" data-label="Histórico">TUBUULACAO DA ACADEMIA</td><td class="num" data-label="Valor">R$ 50,90</td><td class="cc" data-label=""><a class="cbtn" href="comprovantes/2026-06-16_50-90_sicoob.pdf" target="_blank" rel="noopener">ver comprovante ↗</a></td></tr>
+<tr><td class="dt" data-label="Data">16/06/2026</td><td data-label="Origem"><span class="tag sicoob">Sicoob</span></td><td class="desc" data-label="Histórico">TUBULACAO DA ACADEMIA</td><td class="num" data-label="Valor">R$ 36,30</td><td class="cc" data-label=""><a class="cbtn" href="comprovantes/2026-06-16_36-30_sicoob.pdf" target="_blank" rel="noopener">ver comprovante ↗</a></td></tr>
+<tr><td class="dt" data-label="Data">16/06/2026</td><td data-label="Origem"><span class="tag sicoob">Sicoob</span></td><td class="desc" data-label="Histórico">2 TINTAS PRETAS DIRETO NA FERRUGEM</td><td class="num" data-label="Valor">R$ 99,80</td><td class="cc" data-label=""><a class="cbtn" href="comprovantes/2026-06-16_99-80_sicoob.pdf" target="_blank" rel="noopener">ver comprovante ↗</a></td></tr>
+<tr><td class="dt" data-label="Data">18/06/2026</td><td data-label="Origem"><span class="tag sicoob">Sicoob</span></td><td class="desc" data-label="Histórico">MATERIAIS PARA A ACADEMIA</td><td class="num" data-label="Valor">R$ 22,20</td><td class="cc" data-label=""><a class="cbtn" href="comprovantes/2026-06-18_22-20_sicoob.pdf" target="_blank" rel="noopener">ver comprovante ↗</a></td></tr>
+<tr><td class="dt" data-label="Data">18/06/2026</td><td data-label="Origem"><span class="tag sicoob">Sicoob</span></td><td class="desc" data-label="Histórico">ADESIVO EPOX E DISCO DE LIXA PARA A ACAD EMIA</td><td class="num" data-label="Valor">R$ 94,90</td><td class="cc" data-label=""><a class="cbtn" href="comprovantes/2026-06-18_94-90_sicoob.pdf" target="_blank" rel="noopener">ver comprovante ↗</a></td></tr>
+<tr><td class="dt" data-label="Data">18/06/2026</td><td data-label="Origem"><span class="tag sicoob">Sicoob</span></td><td class="desc" data-label="Histórico">DISJUNTOR COMPRADO PARA A ACADEMIA</td><td class="num" data-label="Valor">R$ 10,00</td><td class="cc" data-label=""><a class="cbtn" href="comprovantes/2026-06-18_10-00_sicoob.pdf" target="_blank" rel="noopener">ver comprovante ↗</a></td></tr>
+<tr><td class="dt" data-label="Data">23/06/2026</td><td data-label="Origem"><span class="tag sicoob">Sicoob</span></td><td class="desc" data-label="Histórico">MATERIAL DE CONSTRUCAO ACADEMIA</td><td class="num" data-label="Valor">R$ 2.000,00</td><td class="cc" data-label=""><a class="cbtn" href="comprovantes/2026-06-23_2000-00_sicoob.pdf" target="_blank" rel="noopener">ver comprovante ↗</a></td></tr>
+<tr><td class="dt" data-label="Data">25/06/2026</td><td data-label="Origem"><span class="tag sicoob">Sicoob</span></td><td class="desc" data-label="Histórico">(quebra de página no extrato)</td><td class="num" data-label="Valor">R$ 1.504,00</td><td class="cc" data-label=""><a class="cbtn" href="comprovantes/2026-06-25_1504-00_sicoob.pdf" target="_blank" rel="noopener">ver comprovante ↗</a></td></tr>
+</tbody>
+      <tfoot>
+        <tr><td colspan="3">Sicredi — 11 pagamentos</td><td class="num">18.507,90</td><td></td></tr>
+        <tr><td colspan="3">Sicoob — 16 pagamentos</td><td class="num">12.095,87</td><td></td></tr>
+        <tr><td colspan="3">Nubank — 1 pagamento</td><td class="num">1.000,00</td><td></td></tr>
+        <tr class="grand"><td colspan="3">TOTAL PAGO</td><td class="num">31.603,77</td><td></td></tr>
+      </tfoot>
+    </table></div>
+  </section>
+
+  <section class="block">
+    <h2>Apuração final</h2>
+    <table class="settle">
+      <tr><td>Compras no período (01/03 a 02/07)</td><td class="num">R$ 35.426,83</td></tr>
+      <tr><td>(−) Pagamentos efetuados</td><td class="num neg">− R$ 31.603,77</td></tr>
+      <tr class="result"><td>Saldo devedor</td><td class="num">R$ 3.823,06</td></tr>
+    </table>
+  </section>
+
+  <section class="block">
+    <h2>O que já está pago</h2>
+    <p class="note">Aplicando os pagamentos sobre as compras, da mais antiga para a mais recente (conta-corrente).</p>
+    <div class="fifo-cards">
+      <div class="fcard ok"><span class="fnum">125</span><span class="flbl">pedidos quitados</span><span class="fmeta">até 15/06/2026 #272947</span><span class="fval">R$ 31.592,81</span></div>
+      <div class="fcard open"><span class="fnum">8</span><span class="flbl">pedidos em aberto</span><span class="fmeta">compras a partir de 25/06</span><span class="fval">R$ 3.823,06</span></div>
+    </div>
+    <p class="note" style="margin-top:14px"><strong>Dívida quitada até 15/06/2026.</strong> Pedido #274770 (25/06/2026) pago parcialmente (R$ 10,96 de R$ 1.504,00). Faltam:</p>
+    <div class="tbl-scroll"><table>
+      <thead><tr><th>Data</th><th>Conta</th><th>Pedido</th><th class="num">Valor</th><th class="num">Já pago</th><th class="num">Em aberto</th></tr></thead>
+      <tbody><tr class="parcial"><td class="dt">25/06/2026</td><td>Rafael Lucas</td><td class="muted">#274770</td><td class="num">1.504,00</td><td class="num pos">10,96</td><td class="num saldo">1.493,04</td></tr>
+<tr><td class="dt">27/06/2026</td><td>Rafael Lucas</td><td class="muted">#275020</td><td class="num">4,17</td><td class="num muted">0,00</td><td class="num saldo">4,17</td></tr>
+<tr><td class="dt">27/06/2026</td><td>Rafael Lucas</td><td class="muted">#275022</td><td class="num">898,00</td><td class="num muted">0,00</td><td class="num saldo">898,00</td></tr>
+<tr><td class="dt">27/06/2026</td><td>Rafael Lucas</td><td class="muted">#275023</td><td class="num">496,95</td><td class="num muted">0,00</td><td class="num saldo">496,95</td></tr>
+<tr><td class="dt">27/06/2026</td><td>Rafael Lucas</td><td class="muted">#275024</td><td class="num">111,80</td><td class="num muted">0,00</td><td class="num saldo">111,80</td></tr>
+<tr><td class="dt">27/06/2026</td><td>Rafael Lucas</td><td class="muted">#275025</td><td class="num">189,70</td><td class="num muted">0,00</td><td class="num saldo">189,70</td></tr>
+<tr><td class="dt">27/06/2026</td><td>Rafael Lucas</td><td class="muted">#275026</td><td class="num">109,80</td><td class="num muted">0,00</td><td class="num saldo">109,80</td></tr>
+<tr><td class="dt">29/06/2026</td><td>Rafael Lucas</td><td class="muted">#275154</td><td class="num">519,60</td><td class="num muted">0,00</td><td class="num saldo">519,60</td></tr>
+</tbody>
+      <tfoot><tr class="grand"><td colspan="5">SALDO EM ABERTO</td><td class="num">3.823,06</td></tr></tfoot>
+    </table></div>
+  </section>
+
+  <section class="block">
+    <h2>Evolução do saldo (mês a mês)</h2>
+    <div class="chart"><div class="gcol"><div class="gbar" style="height:37%"><span class="gval">2.601,90</span></div><span class="glbl">Março</span></div>
+<div class="gcol"><div class="gbar" style="height:100%"><span class="gval">7.113,24</span></div><span class="glbl">Abril</span></div>
+<div class="gcol"><div class="gbar" style="height:98%"><span class="gval">6.983,48</span></div><span class="glbl">Maio</span></div>
+<div class="gcol"><div class="gbar" style="height:54%"><span class="gval">3.823,06</span></div><span class="glbl">Junho</span></div>
+</div>
+    <div class="tbl-scroll" style="margin-top:14px"><table>
+      <thead><tr><th>Mês</th><th class="num">Comprou</th><th class="num">Pagou</th><th class="num">Resultado</th><th class="num">Saldo ao fim</th></tr></thead>
+      <tbody><tr><td>Março</td><td class="num">9.543,00</td><td class="num">6.941,10</td><td class="num neg2">−R$ 2.601,90</td><td class="num saldo">R$ 2.601,90</td></tr>
+<tr><td>Abril</td><td class="num">16.078,14</td><td class="num">11.566,80</td><td class="num neg2">−R$ 4.511,34</td><td class="num saldo">R$ 7.113,24</td></tr>
+<tr><td>Maio</td><td class="num">4.870,24</td><td class="num">5.000,00</td><td class="num pos">+R$ 129,76</td><td class="num saldo">R$ 6.983,48</td></tr>
+<tr><td>Junho</td><td class="num">4.935,45</td><td class="num">8.095,87</td><td class="num pos">+R$ 3.160,42</td><td class="num saldo">R$ 3.823,06</td></tr>
+</tbody>
+    </table></div>
+  </section>
+
+  <section class="block">
+    <h2>Documentos de origem</h2>
+    <p class="note">Relatórios de pedidos emitidos pela Rogério Gás:</p>
+    <div class="docs"><a class="doc" href="dividas/pedidos_conta-topweb.pdf" target="_blank" rel="noopener"><span>📄</span>Pedidos · conta Top Web</a><a class="doc" href="dividas/pedidos_conta-rafael-lucas.pdf" target="_blank" rel="noopener"><span>📄</span>Pedidos · conta Rafael Lucas</a></div>
+    <p class="note" style="margin-top:16px">Extratos bancários completos (fonte dos pagamentos):</p>
+    <div class="docs"><a class="doc" href="extratos/sicredi_twt_62790_03-marco.pdf" target="_blank" rel="noopener"><span>📄</span>Sicredi · TWT 62790-9 · Março</a><a class="doc" href="extratos/sicredi_twt_62790_04-abril.pdf" target="_blank" rel="noopener"><span>📄</span>Sicredi · TWT 62790-9 · Abril</a><a class="doc" href="extratos/sicredi_twt_62790_05-06-maio-junho.pdf" target="_blank" rel="noopener"><span>📄</span>Sicredi · TWT 62790-9 · Maio/Junho</a><a class="doc" href="extratos/sicredi_topweb_24323_01-janeiro.pdf" target="_blank" rel="noopener"><span>📄</span>Sicredi · Top Web 24323-0 · Janeiro</a><a class="doc" href="extratos/sicredi_topweb_24323_03-marco.pdf" target="_blank" rel="noopener"><span>📄</span>Sicredi · Top Web 24323-0 · Março</a><a class="doc" href="extratos/sicredi_topweb_24323_04-abril.pdf" target="_blank" rel="noopener"><span>📄</span>Sicredi · Top Web 24323-0 · Abril</a><a class="doc" href="extratos/sicredi_topweb_24323_05-06-maio-junho.pdf" target="_blank" rel="noopener"><span>📄</span>Sicredi · Top Web 24323-0 · Maio/Junho</a><a class="doc" href="extratos/sicoob_twt_28574_03-marco.pdf" target="_blank" rel="noopener"><span>📄</span>Sicoob · TWT 28.574-9 · Março</a><a class="doc" href="extratos/sicoob_twt_28574_04-abril.pdf" target="_blank" rel="noopener"><span>📄</span>Sicoob · TWT 28.574-9 · Abril</a><a class="doc" href="extratos/sicoob_twt_28574_05-maio.pdf" target="_blank" rel="noopener"><span>📄</span>Sicoob · TWT 28.574-9 · Maio</a><a class="doc" href="extratos/sicoob_twt_28574_06-junho.pdf" target="_blank" rel="noopener"><span>📄</span>Sicoob · TWT 28.574-9 · Junho</a></div>
+  </section>
+
+  <section class="block">
+    <details>
+      <summary>Ver detalhamento completo das 133 compras</summary>
+      <div class="tbl-scroll" style="margin-top:12px"><table>
+        <thead><tr><th>Data</th><th>Conta</th><th>Pedido</th><th class="num">Valor (R$)</th></tr></thead>
+        <tbody><tr><td class="dt">11/03/2026</td><td>Rafael Lucas</td><td class="muted">#257845</td><td class="num">1.709,00</td></tr>
+<tr><td class="dt">11/03/2026</td><td>Rafael Lucas</td><td class="muted">#257846</td><td class="num">288,00</td></tr>
+<tr><td class="dt">12/03/2026</td><td>Rafael Lucas</td><td class="muted">#257914</td><td class="num">512,30</td></tr>
+<tr><td class="dt">13/03/2026</td><td>Rafael Lucas</td><td class="muted">#258137</td><td class="num">419,70</td></tr>
+<tr><td class="dt">13/03/2026</td><td>Top Web</td><td class="muted">#258185</td><td class="num">16,80</td></tr>
+<tr><td class="dt">13/03/2026</td><td>Top Web</td><td class="muted">#258265</td><td class="num">7,50</td></tr>
+<tr><td class="dt">16/03/2026</td><td>Rafael Lucas</td><td class="muted">#258577</td><td class="num">94,00</td></tr>
+<tr><td class="dt">16/03/2026</td><td>Top Web</td><td class="muted">#258589</td><td class="num">119,00</td></tr>
+<tr><td class="dt">16/03/2026</td><td>Top Web</td><td class="muted">#258601</td><td class="num">20,00</td></tr>
+<tr><td class="dt">18/03/2026</td><td>Rafael Lucas</td><td class="muted">#258803</td><td class="num">919,00</td></tr>
+<tr><td class="dt">18/03/2026</td><td>Top Web</td><td class="muted">#258979</td><td class="num">129,90</td></tr>
+<tr><td class="dt">18/03/2026</td><td>Rafael Lucas</td><td class="muted">#258994</td><td class="num">1.058,60</td></tr>
+<tr><td class="dt">19/03/2026</td><td>Rafael Lucas</td><td class="muted">#259121</td><td class="num">29,80</td></tr>
+<tr><td class="dt">20/03/2026</td><td>Rafael Lucas</td><td class="muted">#259243</td><td class="num">71,50</td></tr>
+<tr><td class="dt">20/03/2026</td><td>Rafael Lucas</td><td class="muted">#259340</td><td class="num">778,60</td></tr>
+<tr><td class="dt">20/03/2026</td><td>Rafael Lucas</td><td class="muted">#259374</td><td class="num">83,80</td></tr>
+<tr><td class="dt">23/03/2026</td><td>Rafael Lucas</td><td class="muted">#259657</td><td class="num">25,00</td></tr>
+<tr><td class="dt">23/03/2026</td><td>Rafael Lucas</td><td class="muted">#259680</td><td class="num">1.189,00</td></tr>
+<tr><td class="dt">23/03/2026</td><td>Rafael Lucas</td><td class="muted">#259711</td><td class="num">36,30</td></tr>
+<tr><td class="dt">24/03/2026</td><td>Rafael Lucas</td><td class="muted">#259792</td><td class="num">280,00</td></tr>
+<tr><td class="dt">25/03/2026</td><td>Rafael Lucas</td><td class="muted">#259996</td><td class="num">95,90</td></tr>
+<tr><td class="dt">25/03/2026</td><td>Rafael Lucas</td><td class="muted">#260139</td><td class="num">39,80</td></tr>
+<tr><td class="dt">26/03/2026</td><td>Rafael Lucas</td><td class="muted">#260291</td><td class="num">134,40</td></tr>
+<tr><td class="dt">26/03/2026</td><td>Rafael Lucas</td><td class="muted">#260292</td><td class="num">36,00</td></tr>
+<tr><td class="dt">26/03/2026</td><td>Rafael Lucas</td><td class="muted">#260323</td><td class="num">69,90</td></tr>
+<tr><td class="dt">27/03/2026</td><td>Rafael Lucas</td><td class="muted">#260528</td><td class="num">449,00</td></tr>
+<tr><td class="dt">27/03/2026</td><td>Rafael Lucas</td><td class="muted">#260529</td><td class="num">400,00</td></tr>
+<tr><td class="dt">30/03/2026</td><td>Rafael Lucas</td><td class="muted">#260850</td><td class="num">47,70</td></tr>
+<tr><td class="dt">30/03/2026</td><td>Rafael Lucas</td><td class="muted">#260851</td><td class="num">19,90</td></tr>
+<tr><td class="dt">30/03/2026</td><td>Top Web</td><td class="muted">#260948</td><td class="num">13,60</td></tr>
+<tr><td class="dt">30/03/2026</td><td>Rafael Lucas</td><td class="muted">#260953</td><td class="num">449,00</td></tr>
+<tr><td class="dt">01/04/2026</td><td>Rafael Lucas</td><td class="muted">#261179</td><td class="num">1.845,00</td></tr>
+<tr><td class="dt">06/04/2026</td><td>Rafael Lucas</td><td class="muted">#261733</td><td class="num">2.766,25</td></tr>
+<tr><td class="dt">06/04/2026</td><td>Top Web</td><td class="muted">#261756</td><td class="num">49,50</td></tr>
+<tr><td class="dt">08/04/2026</td><td>Rafael Lucas</td><td class="muted">#262163</td><td class="num">1.076,40</td></tr>
+<tr><td class="dt">09/04/2026</td><td>Rafael Lucas</td><td class="muted">#262262</td><td class="num">49,90</td></tr>
+<tr><td class="dt">09/04/2026</td><td>Rafael Lucas</td><td class="muted">#262363</td><td class="num">22,20</td></tr>
+<tr><td class="dt">11/04/2026</td><td>Top Web</td><td class="muted">#262624</td><td class="num">59,90</td></tr>
+<tr><td class="dt">11/04/2026</td><td>Rafael Lucas</td><td class="muted">#262722</td><td class="num">314,90</td></tr>
+<tr><td class="dt">13/04/2026</td><td>Rafael Lucas</td><td class="muted">#262858</td><td class="num">1.455,00</td></tr>
+<tr><td class="dt">14/04/2026</td><td>Rafael Lucas</td><td class="muted">#263003</td><td class="num">1.786,00</td></tr>
+<tr><td class="dt">14/04/2026</td><td>Rafael Lucas</td><td class="muted">#263043</td><td class="num">14,90</td></tr>
+<tr><td class="dt">14/04/2026</td><td>Top Web</td><td class="muted">#263078</td><td class="num">199,00</td></tr>
+<tr><td class="dt">14/04/2026</td><td>Top Web</td><td class="muted">#263079</td><td class="num">21,00</td></tr>
+<tr><td class="dt">15/04/2026</td><td>Top Web</td><td class="muted">#263210</td><td class="num">5,60</td></tr>
+<tr><td class="dt">15/04/2026</td><td>Rafael Lucas</td><td class="muted">#263211</td><td class="num">559,60</td></tr>
+<tr><td class="dt">16/04/2026</td><td>Rafael Lucas</td><td class="muted">#263355</td><td class="num">12,00</td></tr>
+<tr><td class="dt">16/04/2026</td><td>Top Web</td><td class="muted">#263454</td><td class="num">99,00</td></tr>
+<tr><td class="dt">17/04/2026</td><td>Top Web</td><td class="muted">#263509</td><td class="num">25,90</td></tr>
+<tr><td class="dt">17/04/2026</td><td>Top Web</td><td class="muted">#263515</td><td class="num">41,60</td></tr>
+<tr><td class="dt">17/04/2026</td><td>Top Web</td><td class="muted">#263632</td><td class="num">47,80</td></tr>
+<tr><td class="dt">17/04/2026</td><td>Rafael Lucas</td><td class="muted">#263679</td><td class="num">12,47</td></tr>
+<tr><td class="dt">20/04/2026</td><td>Top Web</td><td class="muted">#264028</td><td class="num">140,30</td></tr>
+<tr><td class="dt">20/04/2026</td><td>Top Web</td><td class="muted">#264078</td><td class="num">17,90</td></tr>
+<tr><td class="dt">21/04/2026</td><td>Top Web</td><td class="muted">#264153</td><td class="num">54,90</td></tr>
+<tr><td class="dt">22/04/2026</td><td>Rafael Lucas</td><td class="muted">#264253</td><td class="num">79,80</td></tr>
+<tr><td class="dt">22/04/2026</td><td>Rafael Lucas</td><td class="muted">#264321</td><td class="num">790,00</td></tr>
+<tr><td class="dt">22/04/2026</td><td>Rafael Lucas</td><td class="muted">#264369</td><td class="num">32,40</td></tr>
+<tr><td class="dt">22/04/2026</td><td>Rafael Lucas</td><td class="muted">#264373</td><td class="num">698,90</td></tr>
+<tr><td class="dt">22/04/2026</td><td>Top Web</td><td class="muted">#264381</td><td class="num">2.064,00</td></tr>
+<tr><td class="dt">22/04/2026</td><td>Top Web</td><td class="muted">#264439</td><td class="num">55,50</td></tr>
+<tr><td class="dt">23/04/2026</td><td>Top Web</td><td class="muted">#264525</td><td class="num">60,70</td></tr>
+<tr><td class="dt">23/04/2026</td><td>Top Web</td><td class="muted">#264594</td><td class="num">47,80</td></tr>
+<tr><td class="dt">23/04/2026</td><td>Rafael Lucas</td><td class="muted">#264608</td><td class="num">25,00</td></tr>
+<tr><td class="dt">24/04/2026</td><td>Top Web</td><td class="muted">#264660</td><td class="num">43,70</td></tr>
+<tr><td class="dt">24/04/2026</td><td>Top Web</td><td class="muted">#264676</td><td class="num">22,90</td></tr>
+<tr><td class="dt">24/04/2026</td><td>Rafael Lucas</td><td class="muted">#264715</td><td class="num">20,34</td></tr>
+<tr><td class="dt">25/04/2026</td><td>Top Web</td><td class="muted">#264816</td><td class="num">6,00</td></tr>
+<tr><td class="dt">27/04/2026</td><td>Rafael Lucas</td><td class="muted">#264855</td><td class="num">12,50</td></tr>
+<tr><td class="dt">27/04/2026</td><td>Rafael Lucas</td><td class="muted">#264909</td><td class="num">18,00</td></tr>
+<tr><td class="dt">27/04/2026</td><td>Rafael Lucas</td><td class="muted">#264932</td><td class="num">40,00</td></tr>
+<tr><td class="dt">27/04/2026</td><td>Rafael Lucas</td><td class="muted">#264977</td><td class="num">28,00</td></tr>
+<tr><td class="dt">27/04/2026</td><td>Top Web</td><td class="muted">#264983</td><td class="num">28,90</td></tr>
+<tr><td class="dt">28/04/2026</td><td>Top Web</td><td class="muted">#265128</td><td class="num">89,70</td></tr>
+<tr><td class="dt">28/04/2026</td><td>Rafael Lucas</td><td class="muted">#265129</td><td class="num">40,78</td></tr>
+<tr><td class="dt">28/04/2026</td><td>Rafael Lucas</td><td class="muted">#265178</td><td class="num">67,50</td></tr>
+<tr><td class="dt">29/04/2026</td><td>Rafael Lucas</td><td class="muted">#265286</td><td class="num">1.029,20</td></tr>
+<tr><td class="dt">30/04/2026</td><td>Rafael Lucas</td><td class="muted">#265558</td><td class="num">99,50</td></tr>
+<tr><td class="dt">04/05/2026</td><td>Rafael Lucas</td><td class="muted">#265890</td><td class="num">39,90</td></tr>
+<tr><td class="dt">04/05/2026</td><td>Rafael Lucas</td><td class="muted">#265905</td><td class="num">449,00</td></tr>
+<tr><td class="dt">04/05/2026</td><td>Top Web</td><td class="muted">#266017</td><td class="num">35,00</td></tr>
+<tr><td class="dt">04/05/2026</td><td>Rafael Lucas</td><td class="muted">#266068</td><td class="num">89,90</td></tr>
+<tr><td class="dt">05/05/2026</td><td>Rafael Lucas</td><td class="muted">#266262</td><td class="num">86,08</td></tr>
+<tr><td class="dt">06/05/2026</td><td>Rafael Lucas</td><td class="muted">#266362</td><td class="num">279,80</td></tr>
+<tr><td class="dt">06/05/2026</td><td>Rafael Lucas</td><td class="muted">#266385</td><td class="num">12,40</td></tr>
+<tr><td class="dt">06/05/2026</td><td>Rafael Lucas</td><td class="muted">#266393</td><td class="num">8,00</td></tr>
+<tr><td class="dt">06/05/2026</td><td>Rafael Lucas</td><td class="muted">#266443</td><td class="num">8,00</td></tr>
+<tr><td class="dt">06/05/2026</td><td>Rafael Lucas</td><td class="muted">#266498</td><td class="num">11,00</td></tr>
+<tr><td class="dt">07/05/2026</td><td>Top Web</td><td class="muted">#266578</td><td class="num">19,90</td></tr>
+<tr><td class="dt">07/05/2026</td><td>Rafael Lucas</td><td class="muted">#266621</td><td class="num">36,70</td></tr>
+<tr><td class="dt">08/05/2026</td><td>Rafael Lucas</td><td class="muted">#266755</td><td class="num">94,80</td></tr>
+<tr><td class="dt">08/05/2026</td><td>Rafael Lucas</td><td class="muted">#266871</td><td class="num">60,80</td></tr>
+<tr><td class="dt">09/05/2026</td><td>Rafael Lucas</td><td class="muted">#267018</td><td class="num">19,90</td></tr>
+<tr><td class="dt">11/05/2026</td><td>Rafael Lucas</td><td class="muted">#267277</td><td class="num">14,90</td></tr>
+<tr><td class="dt">12/05/2026</td><td>Rafael Lucas</td><td class="muted">#267325</td><td class="num">24,00</td></tr>
+<tr><td class="dt">13/05/2026</td><td>Rafael Lucas</td><td class="muted">#267521</td><td class="num">72,70</td></tr>
+<tr><td class="dt">13/05/2026</td><td>Rafael Lucas</td><td class="muted">#267679</td><td class="num">399,00</td></tr>
+<tr><td class="dt">15/05/2026</td><td>Rafael Lucas</td><td class="muted">#267954</td><td class="num">1.039,00</td></tr>
+<tr><td class="dt">15/05/2026</td><td>Rafael Lucas</td><td class="muted">#268045</td><td class="num">399,00</td></tr>
+<tr><td class="dt">19/05/2026</td><td>Top Web</td><td class="muted">#268545</td><td class="num">25,90</td></tr>
+<tr><td class="dt">19/05/2026</td><td>Rafael Lucas</td><td class="muted">#268549</td><td class="num">399,00</td></tr>
+<tr><td class="dt">19/05/2026</td><td>Rafael Lucas</td><td class="muted">#268632</td><td class="num">45,00</td></tr>
+<tr><td class="dt">21/05/2026</td><td>Rafael Lucas</td><td class="muted">#268912</td><td class="num">83,80</td></tr>
+<tr><td class="dt">21/05/2026</td><td>Rafael Lucas</td><td class="muted">#269034</td><td class="num">89,86</td></tr>
+<tr><td class="dt">25/05/2026</td><td>Rafael Lucas</td><td class="muted">#269581</td><td class="num">79,90</td></tr>
+<tr><td class="dt">26/05/2026</td><td>Rafael Lucas</td><td class="muted">#269675</td><td class="num">84,70</td></tr>
+<tr><td class="dt">26/05/2026</td><td>Rafael Lucas</td><td class="muted">#269764</td><td class="num">15,00</td></tr>
+<tr><td class="dt">27/05/2026</td><td>Rafael Lucas</td><td class="muted">#269907</td><td class="num">449,00</td></tr>
+<tr><td class="dt">27/05/2026</td><td>Rafael Lucas</td><td class="muted">#269938</td><td class="num">99,80</td></tr>
+<tr><td class="dt">27/05/2026</td><td>Rafael Lucas</td><td class="muted">#269954</td><td class="num">8,80</td></tr>
+<tr><td class="dt">28/05/2026</td><td>Rafael Lucas</td><td class="muted">#270031</td><td class="num">19,00</td></tr>
+<tr><td class="dt">29/05/2026</td><td>Rafael Lucas</td><td class="muted">#270260</td><td class="num">40,00</td></tr>
+<tr><td class="dt">29/05/2026</td><td>Rafael Lucas</td><td class="muted">#270265</td><td class="num">36,90</td></tr>
+<tr><td class="dt">29/05/2026</td><td>Rafael Lucas</td><td class="muted">#270327</td><td class="num">24,00</td></tr>
+<tr><td class="dt">29/05/2026</td><td>Rafael Lucas</td><td class="muted">#270332</td><td class="num">25,00</td></tr>
+<tr><td class="dt">30/05/2026</td><td>Rafael Lucas</td><td class="muted">#270403</td><td class="num">64,90</td></tr>
+<tr><td class="dt">30/05/2026</td><td>Rafael Lucas</td><td class="muted">#270461</td><td class="num">49,90</td></tr>
+<tr><td class="dt">30/05/2026</td><td>Rafael Lucas</td><td class="muted">#270475</td><td class="num">30,00</td></tr>
+<tr><td class="dt">02/06/2026</td><td>Top Web</td><td class="muted">#270877</td><td class="num">12,50</td></tr>
+<tr><td class="dt">02/06/2026</td><td>Top Web</td><td class="muted">#270878</td><td class="num">53,70</td></tr>
+<tr><td class="dt">03/06/2026</td><td>Rafael Lucas</td><td class="muted">#271092</td><td class="num">898,00</td></tr>
+<tr><td class="dt">04/06/2026</td><td>Rafael Lucas</td><td class="muted">#271279</td><td class="num">19,98</td></tr>
+<tr><td class="dt">09/06/2026</td><td>Rafael Lucas</td><td class="muted">#272128</td><td class="num">75,96</td></tr>
+<tr><td class="dt">10/06/2026</td><td>Rafael Lucas</td><td class="muted">#272214</td><td class="num">6,00</td></tr>
+<tr><td class="dt">15/06/2026</td><td>Rafael Lucas</td><td class="muted">#272947</td><td class="num">35,29</td></tr>
+<tr><td class="dt">25/06/2026</td><td>Rafael Lucas</td><td class="muted">#274770</td><td class="num">1.504,00</td></tr>
+<tr><td class="dt">27/06/2026</td><td>Rafael Lucas</td><td class="muted">#275020</td><td class="num">4,17</td></tr>
+<tr><td class="dt">27/06/2026</td><td>Rafael Lucas</td><td class="muted">#275022</td><td class="num">898,00</td></tr>
+<tr><td class="dt">27/06/2026</td><td>Rafael Lucas</td><td class="muted">#275023</td><td class="num">496,95</td></tr>
+<tr><td class="dt">27/06/2026</td><td>Rafael Lucas</td><td class="muted">#275024</td><td class="num">111,80</td></tr>
+<tr><td class="dt">27/06/2026</td><td>Rafael Lucas</td><td class="muted">#275025</td><td class="num">189,70</td></tr>
+<tr><td class="dt">27/06/2026</td><td>Rafael Lucas</td><td class="muted">#275026</td><td class="num">109,80</td></tr>
+<tr><td class="dt">29/06/2026</td><td>Rafael Lucas</td><td class="muted">#275154</td><td class="num">519,60</td></tr>
+</tbody>
+        <tfoot><tr class="grand"><td colspan="3">TOTAL</td><td class="num">35.426,83</td></tr></tfoot>
+      </table></div>
+    </details>
+  </section>
+
+  <footer>
+    <span>TopWeb Telecom Ltda · documento para conferência</span>
+    <span>Rogério Gás · CNPJ 18.859.737/0001-20</span>
+  </footer>
+</div>
+</body></html>
